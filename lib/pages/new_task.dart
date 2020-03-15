@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_moor_provider/data/dao/todos_dao.dart';
 import 'package:flutter_moor_provider/data/task_db.dart';
 import 'package:provider/provider.dart';
 
@@ -46,7 +47,7 @@ class _NewTaskState extends State<NewTask> {
           );
           print(task.toString());
 
-          Provider.of<TaskDatabase>(context, listen: false).insertTask(
+          Provider.of<TodosDao>(context, listen: false).insertTask(
               task); // Listen is false here, Means it will not be rerendered but it needs the access to the model or Bloc
           resetValuesAfterSubmit();
         },

@@ -1,6 +1,7 @@
 // this will generate a table called "todos" for us. The rows of that table will
 // be represented by a class called "Todo".
 
+import 'package:flutter_moor_provider/data/dao/todos_dao.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 part 'task_db.g.dart';
@@ -24,7 +25,7 @@ class Categories extends Table {
 
 // this annotation tells moor to prepare a database class that uses both of the
 // tables we just defined. We'll see how to use that database class in a moment.
-@UseMoor(tables: [Todos])
+@UseMoor(tables: [Todos], daos: [TodosDao])
 class TaskDatabase extends _$TaskDatabase {
   // we tell the database where to store the data with this constructor
   TaskDatabase()
@@ -39,15 +40,4 @@ class TaskDatabase extends _$TaskDatabase {
   int get schemaVersion => 1;
   // we tell the database where to store the data with this constructor
 
-//Queries
-
-  Future<List<Todo>> getAllTasks() => select(todos).get();
-
-  Stream<List<Todo>> watchAllTasks() => select(todos).watch();
-
-  Future insertTask(Todo todo) => into(todos).insert(todo);
-
-  Future updateTask(Todo todo) => update(todos).replace(todo);
-
-  Future deleteTask(Todo todo) => delete(todos).delete(todo);
 }

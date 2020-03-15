@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_moor_provider/data/dao/todos_dao.dart';
 import 'package:flutter_moor_provider/data/task_db.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
@@ -25,11 +26,11 @@ class HomePage extends StatelessWidget {
 
   ///  Private widget Stream buildr which rebuild itself on data snapshot changes
   StreamBuilder<List<Todo>> _buildTaskList(BuildContext context) {
-    final dataBase = Provider.of<TaskDatabase>(
+    final todo_dao = Provider.of<TodosDao>(
         context); //get object of AppDatabse using provider
-    print(dataBase.toString());
+    print(todo_dao.toString());
     return StreamBuilder(
-      stream: dataBase.watchAllTasks(), //watchAllTasks is a stream
+      stream: todo_dao.watchAllTasks(), //watchAllTasks is a stream
       builder: (context, AsyncSnapshot<List<Todo>> snapshot) {
         final tasks = snapshot.data ??
             List(); // if snapshot.data is not null return its value , Otherwise return a empty List()
@@ -38,14 +39,14 @@ class HomePage extends StatelessWidget {
             itemBuilder: (_, index) {
               //_ means context
               final itemTask = tasks[index];
-              return _buildListItem(itemTask, dataBase);
+              return _buildListItem(itemTask, todo_dao);
             });
       },
     );
   }
 
 //Widget for List Item in the list
-  Widget _buildListItem(Todo taskItem, TaskDatabase taskDatabase) {
+  Widget _buildListItem(Todo taskItem, TodosDao todo_dao) {
     return Slidable(
       actionPane: SlidableDrawerActionPane(),
       secondaryActions: <Widget>[
@@ -54,7 +55,7 @@ class HomePage extends StatelessWidget {
           color: Colors.red,
           icon: Icons.delete,
           onTap: () =>
-              taskDatabase.deleteTask(taskItem), //delete item from database
+              todo_dao.deleteTask(taskItem), //delete item from todo_dao
         )
       ],
       child: CheckboxListTile(
@@ -62,7 +63,7 @@ class HomePage extends StatelessWidget {
         subtitle: Text(taskItem.dueDate?.toString() ?? 'No Date'),
         value: taskItem.completed,
         onChanged: (newValue) {
-          taskDatabase.updateTask(taskItem.copyWith(completed: newValue));
+          todo_dao.updateTask(taskItem.copyWith(completed: newValue));
         },
       ),
     );

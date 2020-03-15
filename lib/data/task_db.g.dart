@@ -243,6 +243,8 @@ abstract class _$TaskDatabase extends GeneratedDatabase {
   _$TaskDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $TodosTable _todos;
   $TodosTable get todos => _todos ??= $TodosTable(this);
+  TodosDao _todosDao;
+  TodosDao get todosDao => _todosDao ??= TodosDao(this as TaskDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
