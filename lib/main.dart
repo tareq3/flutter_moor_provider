@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    //this is good practice to use multi Provider
     return MultiProvider(
       providers: [
         Provider<TodosDao>(
