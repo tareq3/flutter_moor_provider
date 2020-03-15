@@ -10,9 +10,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Provider<TodosDao>(
-      create: (_) => TaskDatabase()
-          .todosDao, //creating an access of AppDatabase for all decendent widgets
+    return MultiProvider(
+      providers: [
+        Provider<TodosDao>(
+          create: (_) => TaskDatabase().todosDao,
+        ),
+        Provider<TaskDatabase>(
+          create: (_) => TaskDatabase(),
+        ),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
