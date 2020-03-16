@@ -7,12 +7,22 @@ import 'package:provider/provider.dart';
 
 import 'new_task.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool showCompleted = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Task'),
+        actions: <Widget>[
+          _buildCompletedOnlySwitch()
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -30,7 +40,7 @@ class HomePage extends StatelessWidget {
         context); //get object of AppDatabse using provider
     print(todo_dao.toString());
     return StreamBuilder(
-      stream: todo_dao.watchAllTasks(), //watchAllTasks is a stream
+      stream: showCompleted ?todo_dao.watchAllCompletedTasks(): todo_dao.watchAllCompletedTasksCustom(false), //watchAllTasks is a stream
       builder: (context, AsyncSnapshot<List<Todo>> snapshot) {
         final tasks = snapshot.data ??
             List(); // if snapshot.data is not null return its value , Otherwise return a empty List()
@@ -45,7 +55,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-//Widget for List Item in the list
   Widget _buildListItem(Todo taskItem, TodosDao todo_dao) {
     return Slidable(
       actionPane: SlidableDrawerActionPane(),
@@ -66,6 +75,23 @@ class HomePage extends StatelessWidget {
           todo_dao.updateTask(taskItem.copyWith(completed: newValue));
         },
       ),
+    );
+  }
+
+  Row _buildCompletedOnlySwitch() {
+    return Row(
+      children: <Widget>[
+        Text('Completed only'),
+        Switch(
+          value: showCompleted,
+          activeColor: Colors.white,
+          onChanged: (newValue) {
+            setState(() {
+              showCompleted = newValue;
+            });
+          },
+        ),
+      ],
     );
   }
 }
